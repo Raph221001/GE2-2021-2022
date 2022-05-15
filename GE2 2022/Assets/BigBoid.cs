@@ -46,12 +46,27 @@ public class BigBoid : MonoBehaviour
     private Vector3 worldTarget;
     private Vector3 targetPos;
 
+    public bool offsetPursueEnabled = false;
+    public BigBoid leader;
+
+    public Vector3 offset;
+
+    private Vector3 worldTarget;
+    private Vector3 targetPos;
+
     public Vector3 Pursue(BigBoid pursueTarget)
     {
+<<<<<<< Updated upstream:GE2 2022/Assets/BigBoid.cs
         float dist = Vector3.Distance(pursueTarget.transform.position, transform.position);
         float time = dist / maxSpeed;
         pursueTargetPos = pursueTarget.transform.position 
                     + pursueTarget.velocity * time;
+=======
+        float dist = Vector3.Distance(pursueTarget.transform.position, transform.position);//Calculate the distance between the two objects
+        float time = dist / maxSpeed;//Calculate the time it will take to get there
+        pursueTargetPos = pursueTarget.transform.position 
+                    + pursueTarget.velocity * time;//Find the future position of the target and project forward
+>>>>>>> Stashed changes:GE2 2021/Assets/BigBoid.cs
         return Seek(pursueTargetPos);
     }
 
@@ -76,7 +91,7 @@ public class BigBoid : MonoBehaviour
         if (pursueEnabled && Application.isPlaying)
         {
             Gizmos.color = Color.cyan;
-            Gizmos.DrawLine(transform.position, pursueTargetPos);
+            Gizmos.DrawLine(transform.position, pursueTargetPos);//Draw a line from the current position to the future position
         }
 
     }
@@ -84,6 +99,7 @@ public class BigBoid : MonoBehaviour
     public Vector3 OffsetPursue(BigBoid leader)
     {
         // This is a bug!!
+<<<<<<< Updated upstream:GE2 2022/Assets/BigBoid.cs
         //worldTarget = leader.transform.TransformPoint(offset);
         worldTarget = (leader.transform.rotation * offset) 
                 + leader.transform.position;
@@ -97,12 +113,33 @@ public class BigBoid : MonoBehaviour
     }
 
     // Start is called before the first frame update
+=======
+        worldTarget = leader.transform.TransformPoint(offset);//Calculating the world target
+        //Calculate new position to arrive at relative to leaders current position and rotation
+        worldTarget = (leader.transform.rotation * offset)//Rotate the offset by the leaders current rotation
+                    + leader.transform.position;//Add the leaders current position to the offset
+                + leader.transform.position;
+
+
+        float dist = Vector3.Distance(transform.position, worldTarget);//Calculate distance to world target
+        float time = dist / maxSpeed;//Calculate time to get there
+
+        targetPos = worldTarget + (leader.velocity * time);//Calculate the future position of the target
+        return Arrive(targetPos);
+    }
+
+>>>>>>> Stashed changes:GE2 2021/Assets/BigBoid.cs
     void Start()
     {
         if (offsetPursueEnabled)
         {
+<<<<<<< Updated upstream:GE2 2022/Assets/BigBoid.cs
             offset = transform.position - leader.transform.position;
             offset = Quaternion.Inverse(leader.transform.rotation) * offset;
+=======
+            offset = transform.position - leader.transform.position;//Vector from leader to this boid
+            offset = Quaternion.Inverse(leader.transform.rotation) * offset;//
+>>>>>>> Stashed changes:GE2 2021/Assets/BigBoid.cs
         }
     }
 
@@ -111,15 +148,23 @@ public class BigBoid : MonoBehaviour
         Vector3 force = Vector3.zero;
         force += Input.GetAxis("Vertical") * transform.forward * steeringForce;
 
+<<<<<<< Updated upstream:GE2 2022/Assets/BigBoid.cs
         Vector3 projected = transform.right;
         projected.y = 0;
         projected.Normalize();
+=======
+        //Projecting the right vector onto the XZ plane
+        Vector3 projected = transform.right;
+        projected.y = 0;//Assign y value to zero 
+        projected.Normalize();//Normalize the vector
+>>>>>>> Stashed changes:GE2 2021/Assets/BigBoid.cs
 
         force += Input.GetAxis("Horizontal") * projected * steeringForce;
 
         // Put your code here!
         return force;
     }
+
 
     public Vector3 PathFollow()
     {
@@ -148,16 +193,28 @@ public class BigBoid : MonoBehaviour
 
     public Vector3 Arrive(Vector3 target)
     {
+<<<<<<< Updated upstream:GE2 2022/Assets/BigBoid.cs
        Vector3 toTarget = target - transform.position;
        float dist = toTarget.magnitude;
+=======
+       Vector3 toTarget = target - transform.position;//Calculates the two target vectors
+       float dist = toTarget.magnitude;//Get the distance between the two vectors
+>>>>>>> Stashed changes:GE2 2021/Assets/BigBoid.cs
        if (dist == 0.0f)
        {
            return Vector3.zero;
        }
+<<<<<<< Updated upstream:GE2 2022/Assets/BigBoid.cs
        float ramped = (dist / slowingDistance) * maxSpeed;
        float clamped = Mathf.Min(ramped, maxSpeed);
        Vector3 desired = clamped * (toTarget / dist);
        return desired - velocity;
+=======
+       float ramped = (dist / slowingDistance) * maxSpeed;//Calculate the ramped speed
+       float clamped = Mathf.Min(ramped, maxSpeed);//Calculate the clamped speed
+       Vector3 desired = clamped * (toTarget / dist);//Calculate the desired vector
+       return desired - velocity;//Return the desired vector
+>>>>>>> Stashed changes:GE2 2021/Assets/BigBoid.cs
     }
 
     public Vector3 CalculateForce()
